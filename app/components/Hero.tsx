@@ -41,7 +41,7 @@ export default function Hero() {
                 <Lamps />
 
                 {/* GATE + RAYS */}
-                <div className="absolute inset-0 pointer-events-none z-30 scale-100">
+                <div className="absolute inset-0 pointer-events-none z-[100] scale-100">
                     <Image
                         src={GATE}
                         alt="Arch Decoration"
@@ -139,7 +139,7 @@ export default function Hero() {
                 className="
           absolute bottom-2/12
           w-full
-          h-[70svh] md:h-[100vh] md:translate-y-11/12 lg:translate-y-11/12
+          h-[70svh] md:-bottom-96 lg:-bottom-25
           z-50
           pointer-events-none
           sm:h-full
