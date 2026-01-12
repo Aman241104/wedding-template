@@ -28,10 +28,8 @@ export default function Invite() {
                 gl={{ alpha: true }}
                 onCreated={({ gl }) => gl.setClearColor(0x000000, 0)}
             >
-                {/* 🌅 Warm ambient */}
                 <ambientLight intensity={0.6} color="#ffedd5" />
 
-                {/* 🌞 Key light */}
                 <directionalLight
                     castShadow
                     position={[5, 8, 5]}
@@ -41,7 +39,6 @@ export default function Invite() {
                     raycast={() => null}
                 />
 
-                {/* 🪔 Fill light */}
                 <pointLight
                     position={[-4, 3, 4]}
                     intensity={1.2}
@@ -67,7 +64,7 @@ export default function Invite() {
 
 /* 🌿 MOVING TREE / LEAF SHADOW */
 function MovingShadow() {
-    const lightRef = useRef()
+    const lightRef = useRef(null)
 
     useFrame(({ clock }) => {
         if (!lightRef.current) return
@@ -86,18 +83,18 @@ function MovingShadow() {
             intensity={0.8}
             color="#ffdd99"
             shadow-mapSize={[1024, 1024]}
-            raycast={() => null}   // 🔑 DO NOT INTERCEPT POINTERS
+            raycast={() => null}
         />
     )
 }
 
 function Band({ maxSpeed = 50, minSpeed = 10 }) {
-    const band = useRef()
-    const fixed = useRef()
-    const j1 = useRef()
-    const j2 = useRef()
-    const j3 = useRef()
-    const card = useRef()
+    const band = useRef(null)
+    const fixed = useRef(null)
+    const j1 = useRef(null)
+    const j2 = useRef(null)
+    const j3 = useRef(null)
+    const card = useRef(null)
 
     const vec = new THREE.Vector3()
     const ang = new THREE.Vector3()
@@ -119,13 +116,14 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
     cardTexture.wrapS = cardTexture.wrapT = THREE.RepeatWrapping
     cardTexture.flipY = false
 
-    const [curve] = useState(() =>
-        new THREE.CatmullRomCurve3([
-            new THREE.Vector3(),
-            new THREE.Vector3(),
-            new THREE.Vector3(),
-            new THREE.Vector3(),
-        ])
+    const [curve] = useState(
+        () =>
+            new THREE.CatmullRomCurve3([
+                new THREE.Vector3(),
+                new THREE.Vector3(),
+                new THREE.Vector3(),
+                new THREE.Vector3(),
+            ])
     )
 
     const [dragged, drag] = useState(false)
@@ -144,45 +142,24 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
     }, [hovered, dragged])
 
     useFrame((state, delta) => {
-        if (dragged) {
+        if (dragged && card.current) {
             vec.set(state.pointer.x, state.pointer.y, 0.5).unproject(state.camera)
             dir.copy(vec).sub(state.camera.position).normalize()
             vec.add(dir.multiplyScalar(state.camera.position.length()))
 
-            ;[card, j1, j2, j3, fixed].forEach((r) => r.current?.wakeUp())
-            card.current?.setNextKinematicTranslation({
+            card.current.setNextKinematicTranslation({
                 x: vec.x - dragged.x,
                 y: vec.y - dragged.y,
                 z: vec.z - dragged.z,
             })
         }
 
-        if (fixed.current) {
-            ;[j1, j2].forEach((r) => {
-                if (!r.current.lerped)
-                    r.current.lerped = new THREE.Vector3().copy(r.current.translation())
-
-                const d = Math.max(
-                    0.1,
-                    Math.min(1, r.current.lerped.distanceTo(r.current.translation()))
-                )
-
-                r.current.lerped.lerp(
-                    r.current.translation(),
-                    delta * (minSpeed + d * (maxSpeed - minSpeed))
-                )
-            })
-
+        if (fixed.current && band.current) {
             curve.points[0].copy(j3.current.translation())
-            curve.points[1].copy(j2.current.lerped)
-            curve.points[2].copy(j1.current.lerped)
+            curve.points[1].copy(j2.current.translation())
+            curve.points[2].copy(j1.current.translation())
             curve.points[3].copy(fixed.current.translation())
-
             band.current.geometry.setPoints(curve.getPoints(32))
-
-            ang.copy(card.current.angvel())
-            rot.copy(card.current.rotation())
-            card.current.setAngvel({ x: ang.x, y: ang.y - rot.y * 0.25, z: ang.z })
         }
     })
 
@@ -194,22 +171,11 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
                 <RigidBody ref={j2} position={[1, 0, 0]} {...segmentProps}><BallCollider args={[0.1]} /></RigidBody>
                 <RigidBody ref={j3} position={[1.5, 0, 0]} {...segmentProps}><BallCollider args={[0.1]} /></RigidBody>
 
-                <RigidBody
-                    ref={card}
-                    position={[2, 0, 0]}
-                    {...segmentProps}
-                    type={dragged ? 'kinematicPosition' : 'dynamic'}
-                >
+                <RigidBody ref={card} position={[2, 0, 0]} {...segmentProps} type={dragged ? 'kinematicPosition' : 'dynamic'}>
                     <CuboidCollider args={[0.8, 1.125, 0.01]} />
-
-                    <group
-                        scale={2.25}
-                        position={[0, -1.2, -0.05]}
-                    >
+                    <group scale={2.25} position={[0, -1.2, -0.05]}>
                         <mesh
                             geometry={nodes.card.geometry}
-                            castShadow
-                            receiveShadow
                             onPointerDown={(e) => {
                                 e.stopPropagation()
                                 e.target.setPointerCapture(e.pointerId)
@@ -224,14 +190,8 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
                                 e.target.releasePointerCapture(e.pointerId)
                                 drag(false)
                             }}
-                            onPointerOver={(e) => {
-                                e.stopPropagation()
-                                hover(true)
-                            }}
-                            onPointerOut={(e) => {
-                                e.stopPropagation()
-                                hover(false)
-                            }}
+                            onPointerOver={() => hover(true)}
+                            onPointerOut={() => hover(false)}
                         >
                             <meshPhysicalMaterial
                                 map={cardTexture}
