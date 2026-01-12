@@ -1,17 +1,91 @@
+"use client";
+
 import Image from "next/image";
-import React from "react";
+import React, { useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
+
 import LightRays from "@/components/LightRays";
 import FireworksBackground from "@/components/FireworksBackground";
 import Lamps from "@/app/components/Lamps";
 import FrontLamps from "@/app/components/FrontLamps";
 
+
 const GATE = "/arch.png";
 const HERO = "/image 1.png";
 const FLOWERS = "/Hero-flowers.png";
 
+gsap.registerPlugin(ScrollTrigger);
+
 export default function Hero() {
+    const containerRef = useRef<HTMLDivElement>(null);
+    // 1. Create a ref for the arch image
+    const archRef = useRef<HTMLImageElement>(null);
+    const flowerRef = useRef<HTMLImageElement>(null);
+
+    useGSAP(() => {
+        const textElements = gsap.utils.toArray(".hero-text");
+
+        // --- TEXT ANIMATIONS (Existing) ---
+        // A. Intro: Blur In
+        gsap.fromTo(textElements,
+            { opacity: 0, filter: "blur(12px)", scale: 0.95 },
+            { opacity: 1, filter: "blur(0px)", scale: 1, duration: 2, ease: "power3.out", stagger: 0.2 }
+        );
+
+        // B. Scroll: Float Up
+        gsap.to(textElements, {
+            y: -120,
+            ease: "none",
+            scrollTrigger: {
+                trigger: containerRef.current,
+                start: "top top",
+                end: "bottom top",
+                scrub: 1.5,
+            }
+        });
+
+        // --- ARCH ANIMATION (New) ---
+        // Ensure ref exists before animating
+        if (archRef.current) {
+            gsap.fromTo(archRef.current,
+                {
+                    // Start state: Very blurry and slightly zoomed in
+                    filter: "blur(15px)",
+                    scale: 1, // A slight zoom emphasizes the de-blurring effect
+                },
+                {
+                    // End state: 2px blur as requested and normal scale
+                    filter: "blur(1px)",
+                    scale: 1,
+                    duration: 1.0, // Slow, dramatic intro
+                    ease: "power2.out",
+                }
+            );
+        }
+
+        if (flowerRef.current) {
+            gsap.fromTo(flowerRef.current,
+                {
+                    // Start state: Very blurry and slightly zoomed in
+                    filter: "blur(15px)",
+                    scale: 1, // A slight zoom emphasizes the de-blurring effect
+                },
+                {
+                    // End state: 2px blur as requested and normal scale
+                    filter: "blur(0.5px)",
+                    scale: 1.05,
+                    duration: 1.2, // Slow, dramatic intro
+                    ease: "power2.out",
+                }
+            );
+        }
+
+    }, { scope: containerRef });
+
     return (
-        <div className="relative flex flex-col items-center justify-start min-h-svh overflow-hidden bg-wedding-maroon pt-4 md:pt-6">
+        <div ref={containerRef} className="relative flex flex-col items-center justify-start min-h-svh overflow-hidden bg-wedding-maroon pt-4 md:pt-6">
 
             {/* CARD */}
             <div
@@ -41,12 +115,15 @@ export default function Hero() {
                 <Lamps />
 
                 {/* GATE + RAYS */}
-                <div className="absolute inset-0 pointer-events-none z-[100] scale-100">
+                {/* Removed scale-100 from parent div so GSAP can manage scale on the image itself */}
+                <div className="absolute inset-0 pointer-events-none z-[100]">
                     <Image
+                        ref={archRef} // 2. Attach the ref here
                         src={GATE}
                         alt="Arch Decoration"
                         fill
-                        className="object-cover object-center z-50"
+                        // Added initial blur class to prevent flash of unblurred image before JS loads
+                        className="object-cover object-center z-50 blur-[25px]"
                         sizes="95vw"
                         priority
                     />
@@ -61,16 +138,16 @@ export default function Hero() {
                     </div>
                 </div>
 
-                {/* TEXT */}
+                {/* TEXT CONTAINER */}
                 <div className="absolute inset-0 z-40 flex flex-col items-center justify-center text-center text-white drop-shadow-lg">
 
                     {/* Groom */}
                     <h1
-                        className="
-              -translate-x-4 translate-y-2
+                        className="hero-text
+              -translate-x-20 translate-y-10 text-8xl
               md:-translate-x-32 md:translate-y-8
               playfair-italic
-              text-4xl sm:text-5xl md:text-8xl
+              sm:text-5xl md:text-8xl
               mb-1 md:mb-4
               text-red-900
               drop-shadow-md
@@ -81,10 +158,11 @@ export default function Hero() {
 
                     {/* Weds */}
                     <h1
-                        className="
+                        className="hero-text
+                        -translate-x-4
               relative z-50
               font-ballet
-              text-3xl sm:text-4xl md:text-6xl
+              text-6xl sm:text-4xl md:text-6xl
               my-1 md:my-2
               bg-[linear-gradient(to_right,#BF953F,#FCF6BA,#B38728,#FBF5B7,#AA771C)]
               bg-clip-text text-transparent
@@ -99,11 +177,11 @@ export default function Hero() {
 
                     {/* Bride */}
                     <h1
-                        className="
-              translate-x-4 -translate-y-2
+                        className="hero-text
+              translate-x-20 -translate-y-17
               md:translate-x-32 md:-translate-y-8
               playfair-italic
-              text-4xl sm:text-5xl md:text-8xl
+              text-8xl sm:text-5xl md:text-8xl
               mt-1 md:mt-4
               text-red-900
               drop-shadow-md
@@ -114,9 +192,9 @@ export default function Hero() {
 
                     {/* Date */}
                     <p
-                        className="
+                        className="hero-text
               font-serif
-              text-xs sm:text-sm md:text-2xl
+              text-xl sm:text-xl md:text-2xl
               tracking-[0.2em]
               uppercase
               opacity-90
@@ -126,18 +204,31 @@ export default function Hero() {
                     >
                         Save the Date
                     </p>
+                    <p
+                        className="hero-text
+              font-serif
+              text-2xl sm:text-xl md:text-2xl
+              tracking-[0.2em]
+              uppercase
+              opacity-90
+              mt-6 md:mt-12
+              text-amber-100/90
+            "
+                    >
+                        19th January 2025
+                    </p>
 
                     <FrontLamps />
                 </div>
 
                 {/* WARM OVERLAY */}
-                <div className="absolute inset-0 bg-orange-300 opacity-[2%] mix-blend-overlay z-30" />
+                <div className="absolute inset-0 bg-orange-300 opacity-5 mix-blend-overlay z-30" />
             </div>
 
             {/* FLOWERS */}
             <div
                 className="
-          absolute bottom-2/12
+          absolute bottom-30
           w-full
           h-[70svh] md:-bottom-96 lg:-bottom-25
           z-50
@@ -147,6 +238,7 @@ export default function Hero() {
             >
                 <Image
                     src={FLOWERS}
+                    ref={flowerRef}
                     alt="Floral Decoration"
                     fill
                     className="object-contain object-bottom scale-110 md:scale-105"

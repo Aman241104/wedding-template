@@ -6,6 +6,9 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 
+// REMOVED: import { random } from "mathjs";
+// We will use gsap.utils.random instead (it's built-in)
+
 gsap.registerPlugin(ScrollTrigger);
 
 const FRONT_LAMPS = [
@@ -23,14 +26,12 @@ type LampStyle = {
 export default function FrontLamps() {
     const containerRef = useRef<HTMLDivElement>(null);
 
-    // We need TWO refs per lamp now: one for the parallax wrapper, one for the intro wrapper
     const parallaxRefs = useRef<(HTMLDivElement | null)[]>([]);
     const introRefs = useRef<(HTMLDivElement | null)[]>([]);
 
     const [lampStyles, setLampStyles] = useState<LampStyle[]>([]);
     const [mounted, setMounted] = useState(false);
 
-    // 1. Setup Random Positions
     useEffect(() => {
         const styles = FRONT_LAMPS.map((_, i) => {
             const zoneSize = 100 / FRONT_LAMPS.length;
@@ -46,44 +47,44 @@ export default function FrontLamps() {
         setMounted(true);
     }, []);
 
-    // 2. GSAP Animations
     useGSAP(() => {
         if (!mounted) return;
 
-        // A. INTRO ANIMATION (Uses the Inner 'introRefs')
-        // Floats the lamps UP from lower down (y: 200 -> 0)
+        // A. INTRO ANIMATION
         gsap.fromTo(introRefs.current,
             {
                 y: 1000,
                 opacity: 0,
-                scale:0.7,
+                // FIXED: Use GSAP's built-in random utility
+                scale: gsap.utils.random(0.5, 0.6),
+                filter: "blur(10px)",
             },
             {
+                // NOTE: y: 350 means they will hang 350px down from the top.
+                // If you want them attached to the top edge, change this to y: 0.
                 y: 350,
                 opacity: 1,
                 duration: 3,
                 ease: "power3.out",
-                stagger: 0.2, // Wave effect
+                stagger: 0.2,
+                filter: "blur(2px)",
             }
         );
 
-        // B. SCROLL PARALLAX (Uses the Outer 'parallaxRefs')
-        // Moves the whole group UP into the sky as you scroll (y: 0 -> -500)
-        // Since this targets a DIFFERENT div, it will never conflict with the Intro.
+        // B. SCROLL PARALLAX
         parallaxRefs.current.forEach((el, i) => {
             if (!el) return;
 
-            // Add a little variation in speed for depth
             const speed = 1 + (i * 0.2);
 
             gsap.to(el, {
-                y: -400 * speed, // Move up 400px (multiplied by speed factor)
+                y: -400 * speed,
                 ease: "none",
                 scrollTrigger: {
                     trigger: document.body,
                     start: "top top",
                     end: "bottom top",
-                    scrub: 1, // Smooth catch-up
+                    scrub: 1,
                 }
             });
         });
@@ -95,7 +96,6 @@ export default function FrontLamps() {
     return (
         <div ref={containerRef} className="absolute inset-0 z-50 pointer-events-none w-full h-full overflow-hidden">
             {FRONT_LAMPS.map((src, i) => (
-                // 1. POSITIONING CONTAINER
                 <div
                     key={`front-lamp-${i}`}
                     className="absolute top-0"
@@ -106,13 +106,8 @@ export default function FrontLamps() {
                         aspectRatio: "1/2.5",
                     }}
                 >
-                    {/* 2. PARALLAX WRAPPER (Controlled by ScrollTrigger) */}
                     <div ref={(el) => { if(el) parallaxRefs.current[i] = el }} className="w-full h-full">
-
-                        {/* 3. INTRO WRAPPER (Controlled by GSAP Intro) */}
                         <div ref={(el) => { if(el) introRefs.current[i] = el }} className="w-full h-full">
-
-                            {/* 4. SWING WRAPPER (Controlled by CSS) */}
                             <div
                                 className="w-full h-full origin-top"
                                 style={{

@@ -6,7 +6,9 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 
-// Register Plugin
+// REMOVED: import { random } from "mathjs";
+// Replaced with gsap.utils.random()
+
 gsap.registerPlugin(ScrollTrigger);
 
 const BACK_LAMPS = [
@@ -29,8 +31,6 @@ type LampStyle = {
 export default function Lamps() {
     const containerRef = useRef<HTMLDivElement>(null);
 
-    // Refs for GSAP Animations
-    // We need separate refs for the 'Intro' (float up) and 'Parallax' (scroll) containers
     const backParallaxRefs = useRef<(HTMLDivElement | null)[]>([]);
     const backIntroRefs = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -42,7 +42,7 @@ export default function Lamps() {
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
-        // 1. Setup Back Lamps (7 items)
+        // 1. Setup Back Lamps
         const newBackStyles = BACK_LAMPS.map((_, i) => {
             const zoneSize = 100 / BACK_LAMPS.length;
             const randomOffset = Math.random() * (zoneSize - 5);
@@ -56,7 +56,7 @@ export default function Lamps() {
             };
         });
 
-        // 2. Setup Mid Lamps (4 items)
+        // 2. Setup Mid Lamps
         const newMidStyles = MID_LAMPS.map((_, i) => {
             const zoneSize = 100 / MID_LAMPS.length;
             const randomOffset = Math.random() * (zoneSize - 10);
@@ -78,19 +78,30 @@ export default function Lamps() {
     useGSAP(() => {
         if (!mounted) return;
 
-        // --- ANIMATION GROUP 1: BACK LAMPS (Furthest away) ---
+        // --- ANIMATION GROUP 1: BACK LAMPS ---
 
-        // Intro: Float up gently
         gsap.fromTo(backIntroRefs.current,
-            { y: 1000, opacity: 0 },
-            { y: 300, opacity: 1, duration: 2, ease: "power2.out", stagger: 0.1 }
+            {
+                y: 200, // Start 200px lower
+                opacity: 0,
+                scale: gsap.utils.random(0.5, 0.8), // FIXED: Uses GSAP random
+                filter: "blur(15px)",
+            },
+            {
+                y: 0, // FIXED: Return to natural CSS top position
+                opacity: 1,
+                duration: 2,
+                ease: "power2.out",
+                stagger: 0.1,
+                filter: "blur(5px)",
+            }
         );
 
-        // Scroll: Parallax (Move SLOWLY because they are far away)
+        // Scroll Parallax (Back)
         backParallaxRefs.current.forEach((el) => {
             if (!el) return;
             gsap.to(el, {
-                y: -150, // Move less distance than front lamps
+                y: -150,
                 ease: "none",
                 scrollTrigger: {
                     trigger: document.body,
@@ -101,19 +112,30 @@ export default function Lamps() {
             });
         });
 
-        // --- ANIMATION GROUP 2: MID LAMPS (Middle distance) ---
+        // --- ANIMATION GROUP 2: MID LAMPS ---
 
-        // Intro: Float up
         gsap.fromTo(midIntroRefs.current,
-            { y: 150, opacity: 0 },
-            { y: 0, opacity: 1, duration: 2.2, ease: "power2.out", stagger: 0.15 }
+            {
+                y: 250,
+                opacity: 0,
+                scale: gsap.utils.random(0.6, 0.9), // Slightly larger than back lamps,
+                filter: "blur(10px)",
+            },
+            {
+                y: 0,
+                opacity: 1,
+                duration: 2.2,
+                ease: "power2.out",
+                stagger: 0.15,
+                filter: "blur(3px)",
+            }
         );
 
-        // Scroll: Parallax (Move FASTER than back lamps, SLOWER than front lamps)
+        // Scroll Parallax (Mid)
         midParallaxRefs.current.forEach((el) => {
             if (!el) return;
             gsap.to(el, {
-                y: -250, // Medium speed
+                y: -250,
                 ease: "none",
                 scrollTrigger: {
                     trigger: document.body,
@@ -130,10 +152,9 @@ export default function Lamps() {
 
     return (
         <div ref={containerRef}>
-            {/* LAYER 1: BACK LAMPS */}
-            <div className="absolute inset-0 z-15 pointer-events-none w-full h-full">
+            {/* LAYER 1: BACK LAMPS (z-[15]) */}
+            <div className="absolute inset-0 z-[15] pointer-events-none w-full h-full">
                 {BACK_LAMPS.map((src, i) => (
-                    // 1. Position Wrapper
                     <div
                         key={`back-lamp-${i}`}
                         className="absolute"
@@ -145,9 +166,9 @@ export default function Lamps() {
                             aspectRatio: "1/2",
                         }}
                     >
-                        {/* 2. Parallax Wrapper */}
+                        {/* Parallax Wrapper */}
                         <div ref={(el) => { if (el) backParallaxRefs.current[i] = el }} className="w-full h-full">
-                            {/* 3. Intro Wrapper */}
+                            {/* Intro Wrapper */}
                             <div ref={(el) => { if (el) backIntroRefs.current[i] = el }} className="w-full h-full">
                                 <Image
                                     src={src}
@@ -163,10 +184,9 @@ export default function Lamps() {
                 ))}
             </div>
 
-            {/* LAYER 2: MID LAMPS */}
-            <div className="absolute inset-0 z-[5] pointer-events-none w-full h-full">
+            {/* LAYER 2: MID LAMPS (z-[20] - in front of back lamps) */}
+            <div className="absolute inset-0 z-[20] pointer-events-none w-full h-full">
                 {MID_LAMPS.map((src, i) => (
-                    // 1. Position Wrapper
                     <div
                         key={`mid-lamp-${i}`}
                         className="absolute"
@@ -178,9 +198,9 @@ export default function Lamps() {
                             aspectRatio: "1/2",
                         }}
                     >
-                        {/* 2. Parallax Wrapper */}
+                        {/* Parallax Wrapper */}
                         <div ref={(el) => { if (el) midParallaxRefs.current[i] = el }} className="w-full h-full">
-                            {/* 3. Intro Wrapper */}
+                            {/* Intro Wrapper */}
                             <div ref={(el) => { if (el) midIntroRefs.current[i] = el }} className="w-full h-full">
                                 <Image
                                     src={src}

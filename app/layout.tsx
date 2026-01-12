@@ -51,11 +51,13 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
                                        children,
-                                   }: Readonly<{
-    children: React.ReactNode;
-}>) {
+                                   }: Readonly<{ children: React.ReactNode }>) {
     return (
-        <html lang="en" className={`${ballet.variable} ${greatVibes.variable} ${playfair.variable} ${montserrat.variable} ${anek.variable}`}>
+        <html
+            lang="en"
+            suppressHydrationWarning
+            className={`${ballet.variable} ${greatVibes.variable} ${playfair.variable} ${montserrat.variable} ${anek.variable}`}
+        >
         <body className="font-sans antialiased bg-wedding-maroon text-wedding-cream">
         {children}
         </body>
