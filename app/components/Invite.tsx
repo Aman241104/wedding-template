@@ -9,6 +9,7 @@ import {
     CuboidCollider,
     Physics,
     RigidBody,
+    RigidBodyApi,
     useRopeJoint,
     useSphericalJoint,
 } from '@react-three/rapier'
@@ -64,7 +65,7 @@ export default function Invite() {
 
 /* 🌿 MOVING TREE / LEAF SHADOW */
 function MovingShadow() {
-    const lightRef = useRef(null)
+    const lightRef = useRef<THREE.SpotLight | null>(null)
 
     useFrame(({ clock }) => {
         if (!lightRef.current) return
@@ -89,27 +90,34 @@ function MovingShadow() {
 }
 
 function Band({ maxSpeed = 50, minSpeed = 10 }) {
-    const band = useRef(null)
-    const fixed = useRef(null)
-    const j1 = useRef(null)
-    const j2 = useRef(null)
-    const j3 = useRef(null)
-    const card = useRef(null)
+    const band = useRef<THREE.Mesh | null>(null)
+    const fixed = useRef<RigidBodyApi | null>(null)
+    const j1 = useRef<RigidBodyApi | null>(null)
+    const j2 = useRef<RigidBodyApi | null>(null)
+    const j3 = useRef<RigidBodyApi | null>(null)
+    const card = useRef<RigidBodyApi | null>(null)
 
     const vec = new THREE.Vector3()
-    const ang = new THREE.Vector3()
-    const rot = new THREE.Vector3()
     const dir = new THREE.Vector3()
 
     const segmentProps = {
-        type: 'dynamic',
+        type: 'dynamic' as const,
         canSleep: true,
         colliders: false,
         angularDamping: 2,
         linearDamping: 2,
     }
 
-    const { nodes, materials } = useGLTF('/tag.glb')
+    const { nodes, materials } = useGLTF('/tag.glb') as {
+        nodes: {
+            card: THREE.Mesh
+            clip: THREE.Mesh
+            clamp: THREE.Mesh
+        }
+        materials: {
+            metal: THREE.Material
+        }
+    }
 
     const cardTexture = useTexture('/card.png')
     cardTexture.colorSpace = THREE.SRGBColorSpace
@@ -126,7 +134,7 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
             ])
     )
 
-    const [dragged, drag] = useState(false)
+    const [dragged, drag] = useState<THREE.Vector3 | false>(false)
     const [hovered, hover] = useState(false)
 
     useRopeJoint(fixed, j1, [[0, 0, 0], [0, 0, 0], 1])
@@ -141,7 +149,7 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
         }
     }, [hovered, dragged])
 
-    useFrame((state, delta) => {
+    useFrame((state) => {
         if (dragged && card.current) {
             vec.set(state.pointer.x, state.pointer.y, 0.5).unproject(state.camera)
             dir.copy(vec).sub(state.camera.position).normalize()
@@ -154,7 +162,7 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
             })
         }
 
-        if (fixed.current && band.current) {
+        if (fixed.current && band.current && j1.current && j2.current && j3.current) {
             curve.points[0].copy(j3.current.translation())
             curve.points[1].copy(j2.current.translation())
             curve.points[2].copy(j1.current.translation())
@@ -171,7 +179,12 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
                 <RigidBody ref={j2} position={[1, 0, 0]} {...segmentProps}><BallCollider args={[0.1]} /></RigidBody>
                 <RigidBody ref={j3} position={[1.5, 0, 0]} {...segmentProps}><BallCollider args={[0.1]} /></RigidBody>
 
-                <RigidBody ref={card} position={[2, 0, 0]} {...segmentProps} type={dragged ? 'kinematicPosition' : 'dynamic'}>
+                <RigidBody
+                    ref={card}
+                    position={[2, 0, 0]}
+                    {...segmentProps}
+                    type={dragged ? 'kinematicPosition' : 'dynamic'}
+                >
                     <CuboidCollider args={[0.8, 1.125, 0.01]} />
                     <group scale={2.25} position={[0, -1.2, -0.05]}>
                         <mesh
@@ -182,7 +195,7 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
                                 drag(
                                     new THREE.Vector3()
                                         .copy(e.point)
-                                        .sub(vec.copy(card.current.translation()))
+                                        .sub(vec.copy(card.current!.translation()))
                                 )
                             }}
                             onPointerUp={(e) => {
