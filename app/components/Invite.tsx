@@ -2,6 +2,7 @@
 
 import * as THREE from 'three'
 import { useEffect, useRef, useState } from 'react'
+import { useThree } from '@react-three/fiber'
 import { Canvas, extend, useFrame } from '@react-three/fiber'
 import { useGLTF, useTexture, Environment, Lightformer } from '@react-three/drei'
 import {
@@ -89,11 +90,12 @@ function MovingShadow() {
 function Band({ maxSpeed = 50, minSpeed = 10 }) {
     const band = useRef<THREE.Mesh | null>(null)
 
-    const fixed = useRef<RapierRigidBody | null>(null)
-    const j1 = useRef<RapierRigidBody | null>(null)
-    const j2 = useRef<RapierRigidBody | null>(null)
-    const j3 = useRef<RapierRigidBody | null>(null)
-    const card = useRef<RapierRigidBody | null>(null)
+    const fixed = useRef<RapierRigidBody>(null!)
+    const j1 = useRef<RapierRigidBody>(null!)
+    const j2 = useRef<RapierRigidBody>(null!)
+    const j3 = useRef<RapierRigidBody>(null!)
+    const card = useRef<RapierRigidBody>(null!)
+
 
     const vec = new THREE.Vector3()
     const dir = new THREE.Vector3()
@@ -101,12 +103,13 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
     const segmentProps = {
         type: 'dynamic' as const,
         canSleep: true,
-        colliders: false,
+        colliders: false as const,
         angularDamping: 2,
         linearDamping: 2,
     }
 
-    const { nodes, materials } = useGLTF('/tag.glb') as {
+
+    const gltf = useGLTF('/tag.glb') as unknown as {
         nodes: {
             card: THREE.Mesh
             clip: THREE.Mesh
@@ -116,6 +119,9 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
             metal: THREE.Material
         }
     }
+
+    const { nodes, materials } = gltf
+
 
     const cardTexture = useTexture('/card.png')
     cardTexture.colorSpace = THREE.SRGBColorSpace
@@ -141,11 +147,15 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
     useSphericalJoint(j3, card, [[0, 0, 0], [0, 1.45, 0]])
 
     useEffect(() => {
-        if (hovered) {
-            document.body.style.cursor = dragged ? 'grabbing' : 'grab'
-            return () => (document.body.style.cursor = 'auto')
+        if (!hovered) return
+
+        document.body.style.cursor = dragged ? 'grabbing' : 'grab'
+
+        return () => {
+            document.body.style.cursor = 'auto'
         }
     }, [hovered, dragged])
+
 
     useFrame((state) => {
         if (dragged && card.current) {
@@ -165,11 +175,14 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
             curve.points[1].copy(j2.current.translation())
             curve.points[2].copy(j1.current.translation())
             curve.points[3].copy(fixed.current.translation())
-            band.current.geometry.setPoints(curve.getPoints(32))
+            ;(band.current.geometry as unknown as MeshLineGeometry).setPoints(
+                curve.getPoints(32)
+            )
         }
     })
-
+    const { size } = useThree()
     return (
+
         <>
             <group position={[0, 4, 0]}>
                 <RigidBody ref={fixed} {...segmentProps} type="fixed" />
@@ -227,9 +240,23 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
             </group>
 
             <mesh ref={band}>
-                <meshLineGeometry />
-                <meshLineMaterial map={cardTexture} useMap repeat={[-4, 1]} lineWidth={1.1} />
+                <primitive object={new MeshLineGeometry()} />
+                <primitive
+                    object={
+                        new MeshLineMaterial({
+                            map: cardTexture,
+                            useMap: 1,
+                            repeat: new THREE.Vector2(-4, 1),
+                            lineWidth: 1.1,
+                            resolution: new THREE.Vector2(size.width, size.height),
+                        })
+                    }
+                />
             </mesh>
+
+
+
+
         </>
     )
 }
