@@ -9,7 +9,7 @@ import {
     CuboidCollider,
     Physics,
     RigidBody,
-    RigidBodyApi,
+    RapierRigidBody,
     useRopeJoint,
     useSphericalJoint,
 } from '@react-three/rapier'
@@ -37,14 +37,12 @@ export default function Invite() {
                     intensity={2.2}
                     color="#ffb703"
                     shadow-mapSize={[2048, 2048]}
-                    raycast={() => null}
                 />
 
                 <pointLight
                     position={[-4, 3, 4]}
                     intensity={1.2}
                     color="#fb8500"
-                    raycast={() => null}
                 />
 
                 <Physics gravity={[0, -40, 0]} timeStep={1 / 60}>
@@ -84,18 +82,18 @@ function MovingShadow() {
             intensity={0.8}
             color="#ffdd99"
             shadow-mapSize={[1024, 1024]}
-            raycast={() => null}
         />
     )
 }
 
 function Band({ maxSpeed = 50, minSpeed = 10 }) {
     const band = useRef<THREE.Mesh | null>(null)
-    const fixed = useRef<RigidBodyApi | null>(null)
-    const j1 = useRef<RigidBodyApi | null>(null)
-    const j2 = useRef<RigidBodyApi | null>(null)
-    const j3 = useRef<RigidBodyApi | null>(null)
-    const card = useRef<RigidBodyApi | null>(null)
+
+    const fixed = useRef<RapierRigidBody | null>(null)
+    const j1 = useRef<RapierRigidBody | null>(null)
+    const j2 = useRef<RapierRigidBody | null>(null)
+    const j3 = useRef<RapierRigidBody | null>(null)
+    const card = useRef<RapierRigidBody | null>(null)
 
     const vec = new THREE.Vector3()
     const dir = new THREE.Vector3()
@@ -175,9 +173,15 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
         <>
             <group position={[0, 4, 0]}>
                 <RigidBody ref={fixed} {...segmentProps} type="fixed" />
-                <RigidBody ref={j1} position={[0.5, 0, 0]} {...segmentProps}><BallCollider args={[0.1]} /></RigidBody>
-                <RigidBody ref={j2} position={[1, 0, 0]} {...segmentProps}><BallCollider args={[0.1]} /></RigidBody>
-                <RigidBody ref={j3} position={[1.5, 0, 0]} {...segmentProps}><BallCollider args={[0.1]} /></RigidBody>
+                <RigidBody ref={j1} position={[0.5, 0, 0]} {...segmentProps}>
+                    <BallCollider args={[0.1]} />
+                </RigidBody>
+                <RigidBody ref={j2} position={[1, 0, 0]} {...segmentProps}>
+                    <BallCollider args={[0.1]} />
+                </RigidBody>
+                <RigidBody ref={j3} position={[1.5, 0, 0]} {...segmentProps}>
+                    <BallCollider args={[0.1]} />
+                </RigidBody>
 
                 <RigidBody
                     ref={card}
@@ -191,7 +195,7 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
                             geometry={nodes.card.geometry}
                             onPointerDown={(e) => {
                                 e.stopPropagation()
-                                e.target.setPointerCapture(e.pointerId)
+                                ;(e.target as HTMLElement).setPointerCapture(e.pointerId)
                                 drag(
                                     new THREE.Vector3()
                                         .copy(e.point)
@@ -200,7 +204,7 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
                             }}
                             onPointerUp={(e) => {
                                 e.stopPropagation()
-                                e.target.releasePointerCapture(e.pointerId)
+                                ;(e.target as HTMLElement).releasePointerCapture(e.pointerId)
                                 drag(false)
                             }}
                             onPointerOver={() => hover(true)}
@@ -224,12 +228,7 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
 
             <mesh ref={band}>
                 <meshLineGeometry />
-                <meshLineMaterial
-                    map={cardTexture}
-                    useMap
-                    repeat={[-4, 1]}
-                    lineWidth={1.1}
-                />
+                <meshLineMaterial map={cardTexture} useMap repeat={[-4, 1]} lineWidth={1.1} />
             </mesh>
         </>
     )
