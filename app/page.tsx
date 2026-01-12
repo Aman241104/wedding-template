@@ -23,7 +23,7 @@ export default function Home() {
             {/* Just stack your components normally */}
             <Hero />
 
-            {/*<Invitation />*/}
+            <Invitation />
 
             {/* Gradual Blur needs to be 'fixed' position (in its own CSS)
            to stay on screen, or 'absolute' at the bottom of the content.

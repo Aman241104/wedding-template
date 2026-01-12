@@ -10,6 +10,7 @@ import LightRays from "@/components/LightRays";
 import FireworksBackground from "@/components/FireworksBackground";
 import Lamps from "@/app/components/Lamps";
 import FrontLamps from "@/app/components/FrontLamps";
+import Invite from "@/app/components/Invite";
 
 
 const GATE = "/arch.png";
@@ -85,15 +86,15 @@ export default function Hero() {
     }, { scope: containerRef });
 
     return (
-        <div ref={containerRef} className="relative flex flex-col items-center justify-start min-h-svh overflow-hidden bg-wedding-maroon pt-4 md:pt-6">
+        <div ref={containerRef} className="relative flex flex-col items-center justify-start min-h-svh overflow-hidden bg-wedding-maroon md:pt-6">
 
             {/* CARD */}
             <div
                 className="
           relative
-          w-[96vw] md:w-[95vw]
-          h-[80svh] md:h-[92vh]
-          rounded-2xl md:rounded-[3rem]
+          w-[100vw] md:w-[95vw]
+          h-[80vh] md:h-[92vh]
+          rounded-b-none md:rounded-[3rem]
           overflow-hidden
           shadow-2xl
           z-10
@@ -247,5 +248,6 @@ export default function Hero() {
                 />
             </div>
         </div>
+
     );
 }
