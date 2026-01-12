@@ -1,10 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState, useRef } from "react";
+import {useEffect, useState, useRef} from "react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
+import {ScrollTrigger} from "gsap/ScrollTrigger";
+import {useGSAP} from "@gsap/react";
 
 // REMOVED: import { random } from "mathjs";
 // We will use gsap.utils.random instead (it's built-in)
@@ -89,7 +89,7 @@ export default function FrontLamps() {
             });
         });
 
-    }, { scope: containerRef, dependencies: [mounted] });
+    }, {scope: containerRef, dependencies: [mounted]});
 
     if (!mounted) return null;
 
@@ -106,8 +106,12 @@ export default function FrontLamps() {
                         aspectRatio: "1/2.5",
                     }}
                 >
-                    <div ref={(el) => { if(el) parallaxRefs.current[i] = el }} className="w-full h-full">
-                        <div ref={(el) => { if(el) introRefs.current[i] = el }} className="w-full h-full">
+                    <div ref={(el) => {
+                        if (el) parallaxRefs.current[i] = el
+                    }} className="w-full h-full">
+                        <div ref={(el) => {
+                            if (el) introRefs.current[i] = el
+                        }} className="w-full h-full">
                             <div
                                 className="w-full h-full origin-top"
                                 style={{
@@ -129,8 +133,12 @@ export default function FrontLamps() {
 
             <style jsx global>{`
                 @keyframes swing {
-                    0% { transform: rotate(3deg); }
-                    100% { transform: rotate(-3deg); }
+                    0% {
+                        transform: rotate(3deg);
+                    }
+                    100% {
+                        transform: rotate(-3deg);
+                    }
                 }
             `}</style>
         </div>
