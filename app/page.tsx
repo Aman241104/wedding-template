@@ -18,7 +18,7 @@ export default function Home() {
     duration={600}
 
         >
-        <main className="relative w-full min-h-screen">
+        <main className="relative w-full h-full overflow-x-hidden">
 
             {/* Just stack your components normally */}
             <Hero />
@@ -31,7 +31,6 @@ export default function Home() {
             <div className="pointer-events-none fixed inset-0 z-[60]">
                 <GradualBlur strength={1.5} />
             </div>
-
         </main>
         </ClickSpark>
     );

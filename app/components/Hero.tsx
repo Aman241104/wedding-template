@@ -92,7 +92,7 @@ export default function Hero() {
             <div
                 className="
           relative
-          w-[100vw] md:w-[95vw]
+          w-full md:w-[95vw]
           h-[80vh] md:h-[92vh]
           rounded-b-none md:rounded-[3rem]
           overflow-hidden
@@ -145,7 +145,7 @@ export default function Hero() {
                     {/* Groom */}
                     <h1
                         className="hero-text
-              -translate-x-20 translate-y-10 text-8xl
+              -translate-x-20 translate-y-10 text-6xl
               md:-translate-x-32 md:translate-y-8
               playfair-italic
               sm:text-5xl md:text-8xl
@@ -160,10 +160,10 @@ export default function Hero() {
                     {/* Weds */}
                     <h1
                         className="hero-text
-                        -translate-x-4
+
               relative z-50
               font-ballet
-              text-6xl sm:text-4xl md:text-6xl
+              text-4xl md:text-6xl
               my-1 md:my-2
               bg-[linear-gradient(to_right,#BF953F,#FCF6BA,#B38728,#FBF5B7,#AA771C)]
               bg-clip-text text-transparent
@@ -179,11 +179,10 @@ export default function Hero() {
                     {/* Bride */}
                     <h1
                         className="hero-text
-              translate-x-20 -translate-y-17
+              translate-x-4 -translate-y-14
               md:translate-x-32 md:-translate-y-8
               playfair-italic
-              text-8xl sm:text-5xl md:text-8xl
-              mt-1 md:mt-4
+              text-6xl
               text-red-900
               drop-shadow-md
             "
