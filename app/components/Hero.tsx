@@ -76,16 +76,27 @@ export default function Hero() {
                 {
                     // End state: 2px blur as requested and normal scale
                     filter: "blur(0.5px)",
-                    scale: 1.05,
+                    scale: 1,
                     duration: 1.2, // Slow, dramatic intro
                     ease: "power2.out",
                 }
             );
+            gsap.to(flowerRef.current, {
+                y: -100, // Move flowers up slightly faster than background
+                ease: "none",
+                scrollTrigger: {
+                    trigger: containerRef.current,
+                    start: "top top",
+                    end: "bottom top",
+                    scrub: 1,
+                }
+            });
         }
 
     }, { scope: containerRef });
 
     return (
+        <>
         <div ref={containerRef} className="relative flex flex-col items-center justify-start min-h-svh overflow-hidden bg-wedding-maroon md:pt-6">
 
             {/* CARD */}
@@ -224,13 +235,13 @@ export default function Hero() {
                 {/* WARM OVERLAY */}
                 <div className="absolute inset-0 bg-orange-300 opacity-5 mix-blend-overlay z-30" />
             </div>
-
+        </div>
             {/* FLOWERS */}
             <div
                 className="
           absolute bottom-30
           w-full
-          h-[70svh] md:-bottom-96 lg:-bottom-25
+          h-full md:-bottom-18 lg:scale-118 lg:-bottom-30
           z-50
           pointer-events-none
           sm:h-full
@@ -241,12 +252,13 @@ export default function Hero() {
                     ref={flowerRef}
                     alt="Floral Decoration"
                     fill
-                    className="object-contain object-bottom scale-110 md:scale-105"
+                    className="object-contain object-bottom"
                     priority
                     sizes="100vw"
                 />
             </div>
-        </div>
+
+        </>
 
     );
 }

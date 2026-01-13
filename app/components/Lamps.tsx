@@ -104,7 +104,7 @@ export default function Lamps() {
                 y: -150,
                 ease: "none",
                 scrollTrigger: {
-                    trigger: document.body,
+                    trigger: containerRef.current,
                     start: "top top",
                     end: "bottom top",
                     scrub: 1,

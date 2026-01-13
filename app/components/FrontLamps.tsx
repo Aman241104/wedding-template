@@ -81,7 +81,7 @@ export default function FrontLamps() {
                 y: -400 * speed,
                 ease: "none",
                 scrollTrigger: {
-                    trigger: document.body,
+                    trigger: containerRef.current,
                     start: "top top",
                     end: "bottom top",
                     scrub: 1,

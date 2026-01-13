@@ -3,7 +3,7 @@ import Invite from './Invite'
 
 const Invitation = () => {
     return (
-        <section className="absolute top-3/4 w-full min-h-screen flex flex-col md:flex-row items-center justify-center overflow-hidden bg-wedding-maroon z-0">
+        <section className="absolute top-3/4 w-full min-h-screen flex flex-col md:flex-row items-center justify-center overflow-hidden bg-wedding-maroon z-0 lg:mt-60 md:mt-50">
 
             {/* LEFT COLUMN */}
             <div className="relative w-full md:w-1/2 h-[55vh] md:h-screen flex items-center justify-center z-10">
