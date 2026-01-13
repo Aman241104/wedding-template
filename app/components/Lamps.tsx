@@ -104,9 +104,9 @@ export default function Lamps() {
                 y: -150,
                 ease: "none",
                 scrollTrigger: {
-                    trigger: containerRef.current,
+                    trigger: document.body,
                     start: "top top",
-                    end: "bottom top",
+                    end: "+=100%",
                     scrub: 1,
                 }
             });
@@ -138,78 +138,55 @@ export default function Lamps() {
                 y: -250,
                 ease: "none",
                 scrollTrigger: {
-                    trigger: document.body,
+                    trigger:document.body,
                     start: "top top",
-                    end: "bottom top",
+                    end: "+=100%",
                     scrub: 1,
                 }
             });
         });
-
+        ScrollTrigger.refresh();
     }, { scope: containerRef, dependencies: [mounted] });
 
     if (!mounted) return null;
 
     return (
-        <div ref={containerRef}>
-            {/* LAYER 1: BACK LAMPS (z-[15]) */}
-            <div className="absolute inset-0 z-[15] pointer-events-none w-full h-full">
+        <div ref={containerRef} className="absolute inset-0 w-full h-full pointer-events-none">
+
+            {/* LAYER 1: BACK LAMPS */}
+            <div className="absolute inset-0 z-[15] w-full h-full">
                 {BACK_LAMPS.map((src, i) => (
-                    <div
-                        key={`back-lamp-${i}`}
-                        className="absolute"
-                        style={{
-                            left: backLampStyles[i]?.left || "0",
-                            top: backLampStyles[i]?.top || "0",
-                            width: backLampStyles[i]?.width || "4rem",
-                            height: "auto",
-                            aspectRatio: "1/2",
-                        }}
+                    <div key={`back-lamp-${i}`} className="absolute"
+                         style={{
+                             left: backLampStyles[i]?.left,
+                             top: backLampStyles[i]?.top,
+                             width: backLampStyles[i]?.width,
+                             aspectRatio: "1/2",
+                         }}
                     >
-                        {/* Parallax Wrapper */}
                         <div ref={(el) => { if (el) backParallaxRefs.current[i] = el }} className="w-full h-full">
-                            {/* Intro Wrapper */}
                             <div ref={(el) => { if (el) backIntroRefs.current[i] = el }} className="w-full h-full">
-                                <Image
-                                    src={src}
-                                    alt="Decoration Lamp"
-                                    fill
-                                    className="object-contain object-top animate-pulse"
-                                    style={{ animationDuration: '4s', animationDelay: backLampStyles[i]?.animationDelay }}
-                                    sizes="10vw"
-                                />
+                                <Image src={src} alt="Lamp" fill className="object-contain object-top" sizes="10vw" />
                             </div>
                         </div>
                     </div>
                 ))}
             </div>
 
-            {/* LAYER 2: MID LAMPS (z-[20] - in front of back lamps) */}
-            <div className="absolute inset-0 z-[20] pointer-events-none w-full h-full">
+            {/* LAYER 2: MID LAMPS */}
+            <div className="absolute inset-0 z-[20] w-full h-full">
                 {MID_LAMPS.map((src, i) => (
-                    <div
-                        key={`mid-lamp-${i}`}
-                        className="absolute"
-                        style={{
-                            left: midLampStyles[i]?.left || "0",
-                            top: midLampStyles[i]?.top || "0",
-                            width: midLampStyles[i]?.width || "6rem",
-                            height: "auto",
-                            aspectRatio: "1/2",
-                        }}
+                    <div key={`mid-lamp-${i}`} className="absolute"
+                         style={{
+                             left: midLampStyles[i]?.left,
+                             top: midLampStyles[i]?.top,
+                             width: midLampStyles[i]?.width,
+                             aspectRatio: "1/2",
+                         }}
                     >
-                        {/* Parallax Wrapper */}
                         <div ref={(el) => { if (el) midParallaxRefs.current[i] = el }} className="w-full h-full">
-                            {/* Intro Wrapper */}
                             <div ref={(el) => { if (el) midIntroRefs.current[i] = el }} className="w-full h-full">
-                                <Image
-                                    src={src}
-                                    alt="Decoration Lamp"
-                                    fill
-                                    className="object-contain object-top animate-pulse"
-                                    style={{ animationDuration: '5s', animationDelay: midLampStyles[i]?.animationDelay }}
-                                    sizes="20vw"
-                                />
+                                <Image src={src} alt="Lamp" fill className="object-contain object-top" sizes="20vw" />
                             </div>
                         </div>
                     </div>

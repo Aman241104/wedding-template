@@ -62,7 +62,7 @@ export default function FrontLamps() {
             {
                 // NOTE: y: 350 means they will hang 350px down from the top.
                 // If you want them attached to the top edge, change this to y: 0.
-                y: 350,
+                y: 250,
                 opacity: 1,
                 duration: 3,
                 ease: "power3.out",
@@ -81,20 +81,20 @@ export default function FrontLamps() {
                 y: -400 * speed,
                 ease: "none",
                 scrollTrigger: {
-                    trigger: containerRef.current,
+                    trigger: document.body,
                     start: "top top",
-                    end: "bottom top",
+                    end: "+=100%",
                     scrub: 1,
                 }
             });
         });
-
+        ScrollTrigger.refresh();
     }, {scope: containerRef, dependencies: [mounted]});
 
     if (!mounted) return null;
 
     return (
-        <div ref={containerRef} className="absolute inset-0 z-50 pointer-events-none w-full h-full overflow-hidden">
+        <div ref={containerRef} className="absolute inset-0 z-40 pointer-events-none w-full h-full overflow-hidden">
             {FRONT_LAMPS.map((src, i) => (
                 <div
                     key={`front-lamp-${i}`}

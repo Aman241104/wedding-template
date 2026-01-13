@@ -97,7 +97,7 @@ export default function Hero() {
 
     return (
         <>
-        <div ref={containerRef} className="relative flex flex-col items-center justify-start min-h-svh overflow-hidden bg-wedding-maroon md:pt-6">
+        <div ref={containerRef} id="hero-section" className="relative flex flex-col items-center justify-start min-h-svh overflow-hidden bg-wedding-maroon md:pt-6">
 
             {/* CARD */}
             <div

@@ -25,6 +25,13 @@ export default function Home() {
 
             <Invitation />
 
+            {/*<div*/}
+            {/*    id="scroll-spacer"*/}
+            {/*    className="pointer-events-none"*/}
+            {/*    style={{ height: "200vh" }}*/}
+            {/*/>*/}
+
+
             {/* Gradual Blur needs to be 'fixed' position (in its own CSS)
            to stay on screen, or 'absolute' at the bottom of the content.
         */}
