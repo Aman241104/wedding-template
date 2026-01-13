@@ -108,6 +108,7 @@ export default function Hero() {
           rounded-b-none md:rounded-[3rem]
           overflow-hidden
           shadow-2xl
+          sm:h-[50vh]
           z-10
           border border-white/10
         "
