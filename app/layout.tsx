@@ -4,7 +4,8 @@ import {
     Playfair_Display,
     Montserrat,
     Anek_Gujarati,
-    Ballet
+    Ballet,
+    Amita
 } from "next/font/google";
 import "./globals.css";
 
@@ -44,6 +45,13 @@ const anek = Anek_Gujarati({
     display: "swap",
 });
 
+const amita = Amita({
+    weight: ["400", "700"],
+    subsets: ["latin", "devanagari"],
+    variable: "--font-amita",
+    display: "swap",
+});
+
 export const metadata: Metadata = {
     title: "Ananya Weds Pranav | Royal Wedding Celebration",
     description: "Join us in celebrating the union of Ananya and Pranav.",
@@ -56,7 +64,7 @@ export default function RootLayout({
         <html
             lang="en"
             suppressHydrationWarning
-            className={`${ballet.variable} ${greatVibes.variable} ${playfair.variable} ${montserrat.variable} ${anek.variable}`}
+            className={`${ballet.variable} ${greatVibes.variable} ${playfair.variable} ${montserrat.variable} ${anek.variable} ${amita.variable}`}
         >
         <body className="font-sans antialiased bg-wedding-maroon text-wedding-cream">
         {children}

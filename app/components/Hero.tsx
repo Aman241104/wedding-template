@@ -81,16 +81,6 @@ export default function Hero() {
                     ease: "power2.out",
                 }
             );
-            gsap.to(flowerRef.current, {
-                y: -100, // Move flowers up slightly faster than background
-                ease: "none",
-                scrollTrigger: {
-                    trigger: containerRef.current,
-                    start: "top top",
-                    end: "bottom top",
-                    scrub: 1,
-                }
-            });
         }
 
     }, { scope: containerRef });

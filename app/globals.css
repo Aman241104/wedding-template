@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: #861E1D;
+  --background: #861e1d;
   --foreground: #ededed; /* Changed to light color for contrast on maroon bg */
 }
 
@@ -24,10 +24,12 @@
   --font-script: var(--font-great-vibes);
 
   --font-ballet: var(--font-ballet);
+  --font-amita: var(--font-amita), cursive;
 }
 
 /* Rest of your CSS... */
-html, body {
+html,
+body {
   overflow-x: hidden;
 }
 body {
@@ -51,9 +53,19 @@ body {
     -webkit-text-stroke: 1px #590d22;
   }
   .text-gold-metal {
-      background: linear-gradient(to right, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
+    background: linear-gradient(
+      to right,
+      #bf953f,
+      #fcf6ba,
+      #b38728,
+      #fbf5b7,
+      #aa771c
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .scroll-stack-card {
+    backface-visibility: hidden;
   }
 }
