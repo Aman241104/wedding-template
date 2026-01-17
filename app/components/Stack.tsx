@@ -4,7 +4,8 @@ import MehndiCard from '@/app/components/MehndiCard'
 const Stack = () => {
     return (
         // 1. Ensure the parent section is tall enough to allow scrolling
-        <section className="relative pt-5">
+        // Increased height to ensure cards have space to unstack before the Map appears
+        <section className="relative pt-5 min-h-[100vh]">
 
             {/* 2. IMPORTANT: Pass useWindowScroll={true} */}
             <ScrollStack
@@ -19,7 +20,8 @@ const Stack = () => {
                     <MehndiCard
                         title="मेहंदी"
                         subtitle="Mehndi"
-                        date="10 November"
+                        date="10"
+                        month="November"
                         time="12:00 PM"
                         venue="The Leela Palace, Jaipur"
                     />
@@ -29,7 +31,8 @@ const Stack = () => {
                     <MehndiCard
                         title="हल्दी"
                         subtitle="Haldi"
-                        date="11 November"
+                        date="11"
+                        month="November"
                         time="Morning"
                         venue="The Leela Palace, Jaipur"
                     />
@@ -39,7 +42,19 @@ const Stack = () => {
                     <MehndiCard
                         title="हल्दी"
                         subtitle="Haldi"
-                        date="11 November"
+                        date="11"
+                        month="November"
+                        time="Morning"
+                        venue="The Leela Palace, Jaipur"
+                    />
+                </ScrollStackItem>
+
+                <ScrollStackItem itemClassName="mb-0">
+                    <MehndiCard
+                        title="हल्दी"
+                        subtitle="Haldi"
+                        date="11"
+                        month="November"
                         time="Morning"
                         venue="The Leela Palace, Jaipur"
                     />

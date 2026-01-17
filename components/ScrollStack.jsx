@@ -41,14 +41,23 @@ const ScrollStack = ({
         if (!cardsRef.current.length || !initialTopsRef.current.length) return;
 
         const scrollTop = useWindowScroll ? window.scrollY : scrollerRef.current.scrollTop;
-        const containerHeight = window.innerHeight;
-        const stackPositionPx = parsePercentage(stackPosition, containerHeight);
+        const viewportHeight = window.innerHeight;
+        const stackPositionPx = parsePercentage(stackPosition, viewportHeight);
+
+        // Get container metrics for the fix
+        const containerRect = scrollerRef.current.getBoundingClientRect();
+        // Since getBoundingClientRect is relative to viewport, we need absolute top relative to document if using window.scrollY
+        const absoluteContainerTop = containerRect.top + (useWindowScroll ? window.scrollY : scrollerRef.current.scrollTop);
+        const containerHeight = containerRect.height;
 
         cardsRef.current.forEach((card, i) => {
             const initialTop = initialTopsRef.current[i];
+            const cardHeight = card.offsetHeight;
+
+            // distance from card's original top to the container's top
+            const relativeTopInContainer = initialTop - absoluteContainerTop;
 
             // TRIGGER CALCULATION
-            // We subtract the stack distance so each card "stops" slightly lower than the one before it
             const triggerPoint = initialTop - stackPositionPx - (i * itemStackDistance);
 
             let translateY = 0;
@@ -59,12 +68,19 @@ const ScrollStack = ({
                 translateY = scrollTop - triggerPoint;
             }
 
+            // --- THE FIX ---
+            // Calculate maximum allowed translateY for this card
+            // It is the distance from its initial position to the bottom of the container, minus its own height and some padding.
+            const bottomPadding = 50; // Buffer
+            // We need to ensure we don't push it past the container bottom
+            const maxTranslate = containerHeight - relativeTopInContainer - cardHeight - bottomPadding - (i * itemStackDistance);
+
+            if (translateY > maxTranslate) {
+                translateY = maxTranslate;
+            }
+
             // APPLY TRANSFORMS
             card.style.transform = `translate3d(0, ${translateY}px, 0) scale(${scale})`;
-
-            // REVERSED STACKING:
-            // First card (i=0) gets z-index 0, Second card (i=1) gets z-index 1, etc.
-            // This ensures the newer cards always cover the older ones.
             card.style.zIndex = i;
         });
     }, [baseScale, itemScale, itemStackDistance, stackPosition, useWindowScroll, parsePercentage]);

@@ -3,6 +3,8 @@ import GradualBlur from "@/components/GradualBlur";
 import ClickSpark from "@/components/ClickSpark";
 import Invitation from "@/app/components/Invitation";
 import Stack from "@/app/components/Stack";
+import Map from "@/app/components/Map";
+import Footer from "@/app/components/Footer";
 
 export default function Home() {
     return (
@@ -22,6 +24,10 @@ export default function Home() {
                 </div>
 
                 <Stack />
+
+                <Map />
+
+                <Footer />
 
                 {/* Gradual Blur stays on top but allows clicks via pointer-events-none */}
                 <div className="pointer-events-none fixed inset-0 z-[120]">
