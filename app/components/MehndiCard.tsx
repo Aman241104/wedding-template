@@ -7,15 +7,19 @@ type MehndiCardProps = {
     month: string
     time: string
     venue: string
+    corner: string
+    main: string
 }
 
 const MehndiCard = ({
                         title,
                         subtitle,
-    date,
+                        date,
                         month,
                         time,
-                        venue
+                        venue,
+                        corner,
+                        main
                     }: MehndiCardProps) => {
     return (
         <div

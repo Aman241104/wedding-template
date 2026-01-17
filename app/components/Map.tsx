@@ -22,10 +22,10 @@ const Map = () => {
                     <h2 className="text-4xl md:text-6xl font-amita mb-4">
                         The Venue
                     </h2>
-                    <h3 className="text-3xl md:text-5xl font-script mb-6">
+                    <h3 className="text-3xl md:text-5xl font-amita mb-6">
                         The Leela Palace
                     </h3>
-                    <p className="text-lg md:text-xl font-medium max-w-md mx-auto md:mx-0">
+                    <p className="text-lg md:text-2xl font-serif max-w-md mx-auto md:mx-0">
                         Jaipur, Rajasthan
                     </p>
                     <div className="mt-8">
@@ -33,7 +33,7 @@ const Map = () => {
                             href="https://maps.app.goo.gl/TheLeelaPalaceJaipur" // Placeholder link
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-block border-2 border-[#8B1E1E] px-8 py-3 rounded-full hover:bg-[#8B1E1E] hover:text-[#F3DFC6] transition-colors duration-300 font-medium"
+                            className="inline-block border-2 border-[#8B1E1E] px-8 py-3 rounded-full hover:bg-[#8B1E1E] hover:text-[#F3DFC6] transition-colors duration-300 font-serif font-bold tracking-wider"
                         >
                             Get Directions
                         </a>

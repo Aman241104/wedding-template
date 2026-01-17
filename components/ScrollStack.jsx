@@ -5,7 +5,7 @@ import Lenis from 'lenis';
 
 export const ScrollStackItem = ({ children, itemClassName = '' }) => (
     <div
-        className={`scroll-stack-card relative w-full rounded-[40px] shadow-[0_0_40px_rgba(0,0,0,0.15)] box-border origin-top will-change-transform ${itemClassName}`.trim()}
+        className={`scroll-stack-card relative w-full origin-top will-change-transform ${itemClassName}`.trim()}
         style={{
             backfaceVisibility: 'hidden',
             transformStyle: 'preserve-3d'
@@ -18,9 +18,9 @@ export const ScrollStackItem = ({ children, itemClassName = '' }) => (
 const ScrollStack = ({
                          children,
                          className = '',
-                         itemDistance = 100,
+                         itemDistance = 5,
                          itemScale = 0.05,        // Positive: Cards on top are slightly larger/smaller depending on preference
-                         itemStackDistance = 15,  // Visual offset when stacked
+                         itemStackDistance = 5,  // Visual offset when stacked
                          stackPosition = '15%',   // Screen trigger point
                          baseScale = 1,
                          useWindowScroll = true,
@@ -120,7 +120,7 @@ const ScrollStack = ({
             ref={scrollerRef}
             className={`relative w-full ${useWindowScroll ? '' : 'h-screen overflow-y-auto'} ${className}`}
         >
-            <div className="scroll-stack-inner flex flex-col items-center px-4 pb-[60vh]">
+            <div className="scroll-stack-inner flex flex-col items-center px-4 pb-[10vh]">
                 {children}
             </div>
         </div>
