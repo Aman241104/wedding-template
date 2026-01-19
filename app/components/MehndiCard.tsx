@@ -51,29 +51,29 @@ const MehndiCard = ({
                     <img
                         src={main}
                         alt="Haldi Ceremony"
-                        className="absolute right-15 z-0 -bottom-56 scale-150"
+                        className="absolute sm:right-15 z-0 sm:-bottom-56 sm:scale-150 lg:right-0 lg:bottom-0"
                         draggable={false}
                     />
                 </div>
 
                 {/* RIGHT: text */}
-                <div className="relative flex flex-col justify-center md:pr-10 md:pl-0 text-[#8B1E1E] py-8 md:py-0 text-center md:text-left">
+                <div className="relative flex flex-col justify-center md:pr-10 md:pl-0 text-[#8B1E1E] py-8 text-center md:text-left">
 
-                    <h1 className=" absolute -top-10 left-20 text-[64px] md:text-[80px] font-amita leading-none mb-2">
+                    <h1 className=" absolute sm:-top-10 sm:left-20 text-[64px] md:text-[80px] font-amita leading-none mb-2 md:top-6 md:-left-40">
                         {title}
                     </h1>
 
-                    <p className="absolute italic -top-26 -left-3 text-3xl md:text-4xl mb-8 [-webkit-text-stroke:2px_#F3DFC6] relative z-10 font-[700]">
+                    <p className="absolute italic -top-26 -left-3 text-3xl md:text-4xl mb-8 [-webkit-text-stroke:1px_#F3DFC6] relative z-10 font-[700] md:-left-30 md:-top-22">
                         {subtitle}
                     </p>
 
                     <div className="mb-6 -translate-y-15">
-                        <p className="absolute right-45 text-5xl md:text-6xl font-bold leading-none mb-1">{date}</p>
-                        <p className="absolute right-6 pt-1 text-3xl md:text-6xl font-bold leading-none mb-1">{month}</p>
-                        <p className="absolute right-26 pt-8 italic text-lg md:text-xl">{time}</p>
+                        <p className="absolute right-45 text-5xl md:text-6xl font-bold leading-none mb-1 md:-left-40 md:top-2 lg:top-20">{date}</p>
+                        <p className="absolute right-6 pt-1 text-3xl md:text-6xl font-bold leading-none mb-1 md:-left-20 md:top-1 lg:top-19">{month}</p>
+                        <p className="absolute right-26 pt-8 italic text-lg md:text-xl md:-left-20 md:top-8 lg:top-25">{time}</p>
                     </div>
 
-                    <p className="absolute -translate-y-15 bottom-8 right-8 text-base font-medium max-w-[320px] leading-snug mx-auto md:mx-0">
+                    <p className="absolute -translate-y-15 bottom-8 right-8 text-base font-medium max-w-[320px] leading-snug mx-auto md:mx-0 md:left-20 md:pt-20 md:text-xl lg:-translate-y-5 lg:text-xl">
                         {venue}
                     </p>
 

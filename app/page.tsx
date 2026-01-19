@@ -19,7 +19,7 @@ export default function Home() {
                 {/* INVITATION - Using negative margin to "lift" it into the Hero
                     This mimics your 'top-3/4' look but keeps it interactive.
                 */}
-                <div className="-mt-[25vh] md:-mt-[20vh] relative">
+                <div className="-mt-[25vh] md:-mt-[0vh] relative">
                     <Invitation />
                 </div>
 
