@@ -51,7 +51,7 @@ const MehndiCard = ({
                     <img
                         src={main}
                         alt="Haldi Ceremony"
-                        className="absolute sm:right-15 z-0 sm:-bottom-56 sm:scale-150 lg:right-0 lg:bottom-0"
+                        className="absolute right-10 z-0 -bottom-56 scale-150 lg:right-0 lg:bottom-0"
                         draggable={false}
                     />
                 </div>
@@ -59,11 +59,11 @@ const MehndiCard = ({
                 {/* RIGHT: text */}
                 <div className="relative flex flex-col justify-center md:pr-10 md:pl-0 text-[#8B1E1E] py-8 text-center md:text-left">
 
-                    <h1 className=" absolute sm:-top-10 sm:left-20 text-[64px] md:text-[80px] font-amita leading-none mb-2 md:top-6 md:-left-40">
+                    <h1 className=" absolute -top-10 left-8 text-[64px] md:text-[80px] font-amita leading-none mb-2 md:top-6 md:-left-40">
                         {title}
                     </h1>
 
-                    <p className="absolute italic -top-26 -left-3 text-3xl md:text-4xl mb-8 [-webkit-text-stroke:1px_#F3DFC6] relative z-10 font-[700] md:-left-30 md:-top-22">
+                    <p className="absolute italic -top-26 -left-2 text-3xl md:text-4xl mb-8 [-webkit-text-stroke:1px_#F3DFC6] relative z-10 font-[700] md:-left-30 md:-top-22">
                         {subtitle}
                     </p>
 
