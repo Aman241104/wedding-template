@@ -9,8 +9,8 @@ const events = [
         month: "November",
         time: "12:00 PM",
         venue: "The Leela Palace, Jaipur",
-        corner: "/haldi-corner.png",
-        main: "/haldi-main.png"
+        corner: "/mehndi-corner.png",
+        main: "/mehndi-main.png"
     },
     {
         title: "हल्दी",
@@ -29,8 +29,8 @@ const events = [
         month: "November",
         time: "Evening",
         venue: "The Leela Palace, Jaipur",
-        corner: "/haldi-corner.png",
-        main: "/haldi-main.png"
+        corner: "/sangeet-corner.png",
+        main: "/sangeet-main.png"
     },
     {
         title: "विवाह",
@@ -39,10 +39,10 @@ const events = [
         month: "November",
         time: "Night",
         venue: "The Leela Palace, Jaipur",
-        corner: "/haldi-corner.png",
-        main: "/haldi-main.png"
+        corner: "/vivaah-corner.png",
+        main: "/vivaah-main.png"
     }
-];
+]
 
 const Stack = () => {
     return (

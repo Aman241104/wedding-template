@@ -37,7 +37,7 @@ const MehndiCard = ({
         >
             {/* Hanging decor */}
             <img
-                src="/haldi-corner.png"
+                src={corner}
                 alt=""
                 className="absolute top-0 right-0 w-[55%] pointer-events-none z-10"
                 draggable={false}
@@ -49,17 +49,17 @@ const MehndiCard = ({
                 {/* LEFT: illustration */}
                 <div className="relative flex items-end justify-center md:pb-6">
                     <img
-                        src="/haldi-main.png"
+                        src={main}
                         alt="Haldi Ceremony"
-                        className="absolute z-0  w-[100%] md:w-full md:scale-110 top-0"
+                        className="absolute right-15 z-0 -bottom-56 scale-150"
                         draggable={false}
                     />
                 </div>
 
                 {/* RIGHT: text */}
-                <div className="relative flex flex-col justify-center px-6 md:pr-10 md:pl-0 text-[#8B1E1E] py-8 md:py-0 text-center md:text-left">
+                <div className="relative flex flex-col justify-center md:pr-10 md:pl-0 text-[#8B1E1E] py-8 md:py-0 text-center md:text-left">
 
-                    <h1 className=" absolute -top-12 left-30 text-[64px] md:text-[80px] font-amita leading-none mb-2">
+                    <h1 className=" absolute -top-10 left-20 text-[64px] md:text-[80px] font-amita leading-none mb-2">
                         {title}
                     </h1>
 
@@ -67,13 +67,13 @@ const MehndiCard = ({
                         {subtitle}
                     </p>
 
-                    <div className="mb-6">
+                    <div className="mb-6 -translate-y-15">
                         <p className="absolute right-45 text-5xl md:text-6xl font-bold leading-none mb-1">{date}</p>
                         <p className="absolute right-6 pt-1 text-3xl md:text-6xl font-bold leading-none mb-1">{month}</p>
                         <p className="absolute right-26 pt-8 italic text-lg md:text-xl">{time}</p>
                     </div>
 
-                    <p className="absolute bottom-8 right-8 text-base font-medium max-w-[320px] leading-snug mx-auto md:mx-0">
+                    <p className="absolute -translate-y-15 bottom-8 right-8 text-base font-medium max-w-[320px] leading-snug mx-auto md:mx-0">
                         {venue}
                     </p>
 
