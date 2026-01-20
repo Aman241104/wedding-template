@@ -13,7 +13,7 @@ const Map = () => {
                         allowFullScreen={true}
                         loading="lazy"
                         referrerPolicy="no-referrer-when-downgrade"
-                        className="filter grayscale-[20%] contrast-[1.1]"
+                        className="filter grayscale-[20%] contrast-[1.1] pointer-events-none"
                     ></iframe>
                 </div>
 

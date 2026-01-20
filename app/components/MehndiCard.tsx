@@ -1,4 +1,4 @@
-'use client'
+import Image from 'next/image'
 
 type MehndiCardProps = {
     title: string
@@ -36,10 +36,12 @@ const MehndiCard = ({
       "
         >
             {/* Hanging decor */}
-            <img
+            <Image
                 src={corner}
                 alt=""
-                className="absolute top-0 right-0 w-[55%] pointer-events-none z-10"
+                width={500}
+                height={500}
+                className="absolute top-0 right-0 w-[55%] pointer-events-none z-10 h-auto"
                 draggable={false}
             />
 
@@ -48,10 +50,12 @@ const MehndiCard = ({
 
                 {/* LEFT: illustration */}
                 <div className="relative flex items-end justify-center md:pb-6">
-                    <img
+                    <Image
                         src={main}
                         alt="Haldi Ceremony"
-                        className="absolute right-10 z-0 -bottom-56 scale-150 lg:right-0 lg:bottom-0"
+                        width={600}
+                        height={600}
+                        className="absolute right-10 z-0 -bottom-56 scale-150 lg:right-0 lg:bottom-0 w-auto h-auto"
                         draggable={false}
                     />
                 </div>

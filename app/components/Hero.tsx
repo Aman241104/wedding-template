@@ -10,7 +10,7 @@ import LightRays from "@/components/LightRays";
 import FireworksBackground from "@/components/FireworksBackground";
 import Lamps from "@/app/components/Lamps";
 import FrontLamps from "@/app/components/FrontLamps";
-import Invite from "@/app/components/Invite";
+
 
 
 const GATE = "/arch.png";

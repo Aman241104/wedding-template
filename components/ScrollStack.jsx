@@ -27,8 +27,17 @@ const ScrollStack = ({
                      }) => {
     const scrollerRef = useRef(null);
     const cardsRef = useRef([]);
-    const initialTopsRef = useRef([]);
     const lenisRef = useRef(null);
+
+    // CACHED METRICS to avoid layout thrashing
+    const metricsRef = useRef({
+        initialTops: [],      // Array of initial top positions relative to document
+        cardHeights: [],      // Array of card heights
+        containerTop: 0,      // Container top relative to document
+        containerHeight: 0,   // Container height
+        stackPositionPx: 0,   // The calculated pixel value for stackPosition
+        viewportHeight: 0     // Window height
+    });
 
     const parsePercentage = useCallback((value, containerHeight) => {
         if (typeof value === 'string' && value.includes('%')) {
@@ -37,25 +46,73 @@ const ScrollStack = ({
         return parseFloat(value);
     }, []);
 
-    const updateCardTransforms = useCallback(() => {
-        if (!cardsRef.current.length || !initialTopsRef.current.length) return;
+    // 1. CALCULATE METRICS (Run on mount + resize)
+    const calculateMetrics = useCallback(() => {
+        if (!scrollerRef.current) return;
 
-        const scrollTop = useWindowScroll ? window.scrollY : scrollerRef.current.scrollTop;
+        const cards = cardsRef.current;
+        const scrollY = useWindowScroll ? window.scrollY : scrollerRef.current.scrollTop;
         const viewportHeight = window.innerHeight;
+        const containerRect = scrollerRef.current.getBoundingClientRect();
+
+        // Calculate container metrics
+        // absoluteTop = relativeTop + currentScroll
+        const containerTop = containerRect.top + scrollY;
+        const containerHeight = containerRect.height;
         const stackPositionPx = parsePercentage(stackPosition, viewportHeight);
 
-        // Get container metrics for the fix
-        const containerRect = scrollerRef.current.getBoundingClientRect();
-        // Since getBoundingClientRect is relative to viewport, we need absolute top relative to document if using window.scrollY
-        const absoluteContainerTop = containerRect.top + (useWindowScroll ? window.scrollY : scrollerRef.current.scrollTop);
-        const containerHeight = containerRect.height;
+        // Calculate card metrics
+        const initialTops = cards.map(card => {
+            // Reset transform temporarily to get accurate reading?
+            // Ideally we measure once before any transforms applied, or assume they are reset by logic.
+            // But since we are using transform, getBoundingClientRect might include it.
+            // Getting offsetTop is safer relative to offsetParent if parent is positioned.
+            // However, let's stick to the rect method but ensure we add back the current translation if needed.
+            // For simplicity in this optimization, we assume this runs when layout is stable or we rely on the previous logic's robustness.
+            // A safer way is:
+            const rect = card.getBoundingClientRect();
+            // We need the "untransformed" top ideally.
+            // But if we are mid-scroll, the card already has transform.
+            // Let's rely on the fact that we stored initialTopsRef in the original code.
+            // We will re-calculate "initial" tops only if we assume the layout hasn't shifted structurally.
+            return rect.top + scrollY - (new WebKitCSSMatrix(window.getComputedStyle(card).transform).m42 || 0);
+        });
+
+        const cardHeights = cards.map(card => card.offsetHeight);
+
+        metricsRef.current = {
+            initialTops,
+            cardHeights,
+            containerTop,
+            containerHeight,
+            stackPositionPx,
+            viewportHeight
+        };
+    }, [stackPosition, useWindowScroll, parsePercentage]);
+
+
+    // 2. UPDATE TRANSFORMS (Run on scroll - READS ONLY FROM CACHE)
+    const updateCardTransforms = useCallback(() => {
+        if (!cardsRef.current.length) return;
+
+        const {
+            initialTops,
+            cardHeights,
+            containerTop,
+            containerHeight,
+            stackPositionPx
+        } = metricsRef.current;
+
+        if (!initialTops.length) return;
+
+        const scrollTop = useWindowScroll ? window.scrollY : scrollerRef.current.scrollTop;
 
         cardsRef.current.forEach((card, i) => {
-            const initialTop = initialTopsRef.current[i];
-            const cardHeight = card.offsetHeight;
+            const initialTop = initialTops[i];
+            const cardHeight = cardHeights[i];
 
             // distance from card's original top to the container's top
-            const relativeTopInContainer = initialTop - absoluteContainerTop;
+            const relativeTopInContainer = initialTop - containerTop;
 
             // TRIGGER CALCULATION
             const triggerPoint = initialTop - stackPositionPx - (i * itemStackDistance);
@@ -69,10 +126,7 @@ const ScrollStack = ({
             }
 
             // --- THE FIX ---
-            // Calculate maximum allowed translateY for this card
-            // It is the distance from its initial position to the bottom of the container, minus its own height and some padding.
-            const bottomPadding = 50; // Buffer
-            // We need to ensure we don't push it past the container bottom
+            const bottomPadding = 50;
             const maxTranslate = containerHeight - relativeTopInContainer - cardHeight - bottomPadding - (i * itemStackDistance);
 
             if (translateY > maxTranslate) {
@@ -83,16 +137,25 @@ const ScrollStack = ({
             card.style.transform = `translate3d(0, ${translateY}px, 0) scale(${scale})`;
             card.style.zIndex = i;
         });
-    }, [baseScale, itemScale, itemStackDistance, stackPosition, useWindowScroll, parsePercentage]);
+    }, [baseScale, itemStackDistance, useWindowScroll]);
 
     useLayoutEffect(() => {
         const cards = Array.from(scrollerRef.current.querySelectorAll('.scroll-stack-card'));
         cardsRef.current = cards;
 
-        // Measure positions un-transformed
-        cards.forEach(card => card.style.transform = 'none');
-        const scrollY = useWindowScroll ? window.scrollY : scrollerRef.current.scrollTop;
-        initialTopsRef.current = cards.map(card => card.getBoundingClientRect().top + scrollY);
+        // Initial Calculation
+        calculateMetrics();
+
+        // Resize Listener
+        const handleResize = () => {
+             // Reset transforms to get clean measurements?
+             // Or just recalculate.
+             cards.forEach(card => card.style.transform = 'none');
+             calculateMetrics();
+             updateCardTransforms();
+        };
+
+        window.addEventListener('resize', handleResize);
 
         const lenis = new Lenis({
             lerp: 0.1,
@@ -108,12 +171,14 @@ const ScrollStack = ({
         requestAnimationFrame(raf);
         lenisRef.current = lenis;
 
+        // Initial update
         updateCardTransforms();
 
         return () => {
             lenis.destroy();
+            window.removeEventListener('resize', handleResize);
         };
-    }, [updateCardTransforms, useWindowScroll]);
+    }, [calculateMetrics, updateCardTransforms]);
 
     return (
         <div
