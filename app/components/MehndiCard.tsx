@@ -22,64 +22,87 @@ const MehndiCard = ({
                         main
                     }: MehndiCardProps) => {
     return (
-        <div
-            className="
-        relative
-        w-full
-        max-w-[900px]
-        mx-auto
-        rounded-[28px]
-        bg-[#F3DFC6]
-        border-[4px] border-[#8B1E1E]
-        shadow-xl
-        overflow-hidden
-      "
-        >
-            {/* Hanging decor */}
-            <Image
-                src={corner}
-                alt=""
-                width={500}
-                height={500}
-                className="absolute top-0 right-0 w-[55%] pointer-events-none z-10 h-auto"
-                draggable={false}
-            />
+        <div className="relative w-full min-h-screen bg-wedding-maroon/0 flex items-center justify-center p-4 md:p-8">
+            
+            {/* CARD CONTAINER */}
+            <div className="
+                relative w-full max-w-6xl
+                bg-white
+                border-[12px] border-double border-amber-400
+                shadow-2xl rounded-sm
+                overflow-hidden
+                flex flex-col md:flex-row
+                min-h-[80vh]
+            ">
+                
+                {/* DECORATIVE CORNER (Top Right) */}
+                 <Image
+                    src={corner}
+                    alt=""
+                    width={400}
+                    height={400}
+                    className="absolute top-0 right-0 w-[40%] md:w-[25%] pointer-events-none z-10 opacity-90"
+                    draggable={false}
+                />
+                 {/* DECORATIVE CORNER (Bottom Left - Rotated) */}
+                 <Image
+                    src={corner}
+                    alt=""
+                    width={400}
+                    height={400}
+                    className="absolute bottom-0 left-0 w-[40%] md:w-[25%] pointer-events-none z-10 opacity-90 rotate-180"
+                    draggable={false}
+                />
 
-            {/* Main layout */}
-            <div className="grid grid-cols-1 md:grid-cols-[45%_55%] min-h-[420px]">
-
-                {/* LEFT: illustration */}
-                <div className="relative flex items-end justify-center md:pb-6">
+                {/* LEFT SIDE: IMAGE */}
+                <div className="w-full md:w-1/2 relative min-h-[40vh] md:min-h-full bg-orange-50/50">
                     <Image
                         src={main}
-                        alt="Haldi Ceremony"
-                        width={600}
-                        height={600}
-                        className="absolute right-10 z-0 -bottom-56 scale-150 lg:right-0 lg:bottom-0 w-auto h-auto"
+                        alt={title}
+                        fill
+                        className="object-contain object-bottom p-8"
                         draggable={false}
                     />
                 </div>
 
-                {/* RIGHT: text */}
-                <div className="relative flex flex-col justify-center md:pr-10 md:pl-0 text-[#8B1E1E] py-8 text-center md:text-left">
-
-                    <h1 className=" absolute -top-10 left-8 text-[64px] md:text-[80px] font-amita leading-none mb-2 md:top-6 md:-left-40">
-                        {title}
-                    </h1>
-
-                    <p className="absolute italic -top-26 -left-2 text-3xl md:text-4xl mb-8 [-webkit-text-stroke:1px_#F3DFC6] relative z-10 font-[700] md:-left-30 md:-top-22">
-                        {subtitle}
-                    </p>
-
-                    <div className="mb-6 -translate-y-15">
-                        <p className="absolute right-45 text-5xl md:text-6xl font-bold leading-none mb-1 md:-left-40 md:top-2 lg:top-20">{date}</p>
-                        <p className="absolute right-6 pt-1 text-3xl md:text-6xl font-bold leading-none mb-1 md:-left-20 md:top-1 lg:top-19">{month}</p>
-                        <p className="absolute right-26 pt-8 italic text-lg md:text-xl md:-left-20 md:top-8 lg:top-25">{time}</p>
+                {/* RIGHT SIDE: TEXT */}
+                <div className="w-full md:w-1/2 relative flex flex-col justify-center items-center text-center p-8 md:p-12 z-20">
+                    
+                    {/* Header */}
+                    <div className="mb-8">
+                        <p className="font-serif text-sm md:text-base tracking-[0.2em] text-amber-700 mb-4 uppercase">
+                            Moments of Happiness
+                        </p>
+                        <h1 className="font-amita text-6xl md:text-8xl text-red-800 mb-2">
+                            {title}
+                        </h1>
+                         <h2 className="font-playfair italic text-4xl md:text-5xl text-amber-600">
+                            & {subtitle}
+                        </h2>
                     </div>
 
-                    <p className="absolute -translate-y-15 bottom-8 right-8 text-base font-medium max-w-[320px] leading-snug mx-auto md:mx-0 md:left-20 md:pt-20 md:text-xl lg:-translate-y-5 lg:text-xl">
-                        {venue}
-                    </p>
+                    {/* Date */}
+                    <div className="flex flex-col items-center mb-8 border-y-2 border-amber-200 py-6 w-3/4">
+                        <span className="font-serif text-xl tracking-widest text-gray-600 mb-2">
+                             {date} {month}
+                        </span>
+                        <span className="font-playfair text-5xl md:text-6xl text-red-900 font-bold">
+                            2025
+                        </span>
+                        <span className="font-serif text-lg text-amber-700 mt-2 italic">
+                            {time}
+                        </span>
+                    </div>
+
+                    {/* Venue */}
+                     <div>
+                        <p className="font-serif text-gray-500 text-sm tracking-widest uppercase mb-2">
+                            At Our Residence
+                        </p>
+                        <p className="font-playfair text-xl md:text-2xl text-red-900 font-medium max-w-xs mx-auto">
+                            {venue}
+                        </p>
+                    </div>
 
                 </div>
             </div>

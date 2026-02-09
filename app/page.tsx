@@ -4,7 +4,7 @@ import GradualBlur from "@/components/GradualBlur";
 import ClickSpark from "@/components/ClickSpark";
 import Invitation from "@/app/components/Invitation";
 
-const Stack = dynamic(() => import('@/app/components/Stack'), { ssr: true });
+const Events = dynamic(() => import('@/app/components/Events'), { ssr: true });
 const Map = dynamic(() => import('@/app/components/Map'), { ssr: true });
 const Footer = dynamic(() => import('@/app/components/Footer'), { ssr: true });
 
@@ -25,7 +25,7 @@ export default function Home() {
                     <Invitation />
                 </div>
 
-                <Stack />
+                <Events />
 
                 <Map />
 
