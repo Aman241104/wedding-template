@@ -87,20 +87,17 @@ export default function Hero() {
 
     return (
         <>
-        <div ref={containerRef} id="hero-section" className="relative flex flex-col items-center justify-start min-h-svh overflow-hidden bg-wedding-maroon md:pt-6">
+        <div ref={containerRef} id="hero-section" className="relative flex flex-col items-center justify-start min-h-svh overflow-hidden bg-wedding-maroon">
 
             {/* CARD */}
             <div
                 className="
           relative
-          w-full md:w-[95vw]
+          w-full
           h-[80vh] md:h-[92vh]
-          rounded-b-none md:rounded-[3rem]
           overflow-hidden
-          shadow-2xl
           sm:h-[50vh]
           z-10
-          border border-white/10
         "
             >
                 {/* BACKGROUND */}
@@ -184,7 +181,7 @@ export default function Hero() {
               translate-x-4 -translate-y-14
               md:translate-x-32 md:-translate-y-8
               playfair-italic
-              text-6xl
+              text-6xl sm:text-5xl md:text-8xl
               text-red-900
               drop-shadow-md
             "
