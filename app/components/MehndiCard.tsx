@@ -50,7 +50,7 @@ const MehndiCard = ({
                     alt=""
                     width={400}
                     height={400}
-                    className="absolute bottom-0 left-0 w-[40%] md:w-[25%] pointer-events-none z-10 opacity-90 rotate-180"
+                    className="absolute top-0 left-0 w-[40%] md:w-[25%] pointer-events-none z-10 opacity-90 scale-x-[-1]"
                     draggable={false}
                 />
 
@@ -60,7 +60,7 @@ const MehndiCard = ({
                         src={main}
                         alt={title}
                         fill
-                        className="object-contain object-bottom p-8"
+                        className="object-cover object-center"
                         draggable={false}
                     />
                 </div>
